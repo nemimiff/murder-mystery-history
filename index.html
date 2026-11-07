@@ -3,32 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Madamystery Log</title>
+  <title>Murder Mystery Log</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-base: #f5f3ef;
-      --card-bg: #ffffff;
-      --text-main: #3d3a37;
-      --text-sub: #7a756e;
-      --text-muted: #aaa39a;
-      --border-color: #e8e4dc;
-      --accent-main: #5b8272;
-      --accent-light: #eef3f0;
-      --tag-uzu: #8da3b0;
-      --tag-uzu-bg: #f0f4f7;
-      --tag-disco: #9fa0b5;
-      --tag-disco-bg: #f2f2f7;
-      --danger-color: #c48f8f;
-      --danger-bg: #fcf4f4;
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
+      --bg-base: #E8E2D8;
+      --card-bg: #FBF9F5;
+      --text-main: #343B37;
+      --text-sub: #69746F;
+      --text-muted: #89918D;
+      --border-color: #BFC6C4;
+      --accent-main: #6F8F72;
+      --accent-light: #E6EEE6;
+      --accent-warm: #F2A65A;
+      --accent-warm-light: #FCF0E2;
+      --accent-warm-text: #59412B;
+      --tag-uzu: #58745F;
+      --tag-uzu-bg: #E3ECE5;
+      --tag-disco: #746F65;
+      --tag-disco-bg: #F0ECE5;
+      --danger-color: #A56E63;
+      --danger-bg: #F8EFEC;
+      --radius-sm: 6px;
+      --radius-md: 11px;
+      --radius-lg: 16px;
       --radius-full: 9999px;
-      --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
-      --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.06);
+      --shadow-sm: 0 2px 8px rgba(52, 59, 55, 0.06);
+      --shadow-md: 0 8px 24px rgba(52, 59, 55, 0.12);
     }
 
     * {
@@ -96,6 +99,7 @@
     /* 検索 & フィルターエリア */
     .search-card {
       background: var(--card-bg);
+      border: 1px solid rgba(111, 143, 114, 0.26);
       border-radius: var(--radius-lg);
       padding: 14px;
       box-shadow: var(--shadow-sm);
@@ -120,7 +124,7 @@
       height: 16px;
       flex: none;
       stroke: currentColor;
-      stroke-width: 2;
+      stroke-width: 1.6;
       stroke-linecap: round;
       stroke-linejoin: round;
       fill: none;
@@ -143,7 +147,8 @@
     }
     .search-input:focus {
       border-color: var(--accent-main);
-      background: #ffffff;
+      background: var(--card-bg);
+      box-shadow: 0 0 0 3px rgba(111, 143, 114, 0.18);
     }
     .clear-btn {
       position: absolute;
@@ -161,7 +166,7 @@
     /* プラットフォーム切り替えセグメント */
     .filter-segment {
       display: flex;
-      background: var(--bg-base);
+      background: var(--accent-light);
       padding: 3px;
       border-radius: var(--radius-full);
     }
@@ -180,10 +185,10 @@
       text-align: center;
     }
     .segment-btn.active {
-      background: #ffffff;
-      color: var(--text-main);
+      background: var(--accent-main);
+      color: #ffffff;
       font-weight: 700;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 2px 6px rgba(111, 143, 114, 0.28);
     }
 
     /* 統計バー */
@@ -203,6 +208,7 @@
     }
     .scenario-card {
       background: var(--card-bg);
+      border: 1px solid rgba(111, 143, 114, 0.26);
       border-radius: var(--radius-lg);
       padding: 16px;
       box-shadow: var(--shadow-sm);
@@ -296,8 +302,9 @@
       margin-top: 2px;
     }
     .player-tag {
-      background: var(--bg-base);
-      color: var(--text-sub);
+      background: var(--accent-warm-light);
+      border: 1px solid rgba(242, 166, 90, 0.32);
+      color: var(--accent-warm-text);
       border-radius: var(--radius-md);
       padding: 3px 8px;
       font-size: 0.75rem;
@@ -310,9 +317,8 @@
       font-weight: 600;
     }
     .player-tag.highlight {
-      background: #eef5ea;
-      border: 1px solid #c2debb;
-      color: #3b6b37;
+      background: #F8DDBB;
+      border-color: rgba(242, 166, 90, 0.72);
     }
 
     /* ネタバレ開閉エリア（自爆・誤爆防止） */
@@ -341,9 +347,9 @@
       display: none;
       margin-top: 10px;
       padding: 10px;
-      background: #faf9f6;
+      background: var(--accent-warm-light);
       border-radius: var(--radius-md);
-      border: 1px solid #ede8de;
+      border: 1px solid rgba(242, 166, 90, 0.28);
       font-size: 0.8rem;
       line-height: 1.5;
       color: var(--text-main);
@@ -380,11 +386,11 @@
       display: flex;
     }
     .modal-sheet {
-      background: #ffffff;
+      background: var(--card-bg);
       width: 100%;
       max-width: 480px;
       max-height: 90vh;
-      border-radius: 24px 24px 0 0;
+      border-radius: 18px 18px 0 0;
       padding: 20px 18px 32px;
       display: flex;
       flex-direction: column;
@@ -432,7 +438,8 @@
     }
     .form-input:focus, .form-textarea:focus {
       border-color: var(--accent-main);
-      background: #ffffff;
+      background: var(--card-bg);
+      box-shadow: 0 0 0 3px rgba(111, 143, 114, 0.14);
     }
     .form-textarea {
       resize: vertical;
@@ -448,7 +455,7 @@
       gap: 8px;
     }
     .spoiler-form-box .form-input, .spoiler-form-box .form-textarea {
-      background: #ffffff;
+      background: var(--card-bg);
     }
     .submit-btn {
       background: var(--accent-main);
@@ -460,6 +467,12 @@
       font-weight: 700;
       cursor: pointer;
       margin-top: 6px;
+      box-shadow: 0 4px 10px rgba(111, 143, 114, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(111, 143, 114, 0.38);
     }
 
     /* ボトムバー */
@@ -469,7 +482,7 @@
       left: 0;
       right: 0;
       height: 60px;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(251, 249, 245, 0.94);
       backdrop-filter: blur(10px);
       border-top: 1px solid var(--border-color);
       display: flex;
@@ -496,7 +509,12 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(91, 130, 114, 0.3);
+      box-shadow: 0 4px 12px rgba(111, 143, 114, 0.36);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .add-floating-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(111, 143, 114, 0.42);
     }
 
     .empty-state {
@@ -514,7 +532,7 @@
   <!-- ヘッダー -->
   <header class="app-header">
     <div class="header-title-wrap">
-      <h1 class="app-title">Madamystery Log</h1>
+      <h1 class="app-title">Murder Mystery Log</h1>
       <span class="app-subtitle">通過シナリオ＆同卓者検索ロガー</span>
     </div>
     <button class="header-btn" id="openDataModalBtn">
@@ -638,7 +656,7 @@ Cさん"></textarea>
 
       <div style="display:flex;gap:8px;">
         <button class="header-btn" id="exportBtn" style="flex:1;justify-content:center;">現在の全データを書き出し</button>
-        <button class="header-btn" id="importBtn" style="flex:1;justify-content:center;background:var(--accent-light);color:var(--accent-main);border-color:#b9d4c8;">貼り付けデータを復元</button>
+        <button class="header-btn" id="importBtn" style="flex:1;justify-content:center;background:var(--accent-light);color:var(--accent-main);border-color:var(--border-color);">貼り付けデータを復元</button>
       </div>
     </div>
   </div>
