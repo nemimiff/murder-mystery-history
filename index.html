@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Madamystery Log</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #f5f3ef;
+      --card-bg: #ffffff;
+      --text-main: #3d3a37;
+      --text-sub: #7a756e;
+      --text-muted: #aaa39a;
+      --border-color: #e8e4dc;
+      --accent-main: #5b8272;
+      --accent-light: #eef3f0;
+      --tag-uzu: #8da3b0;
+      --tag-uzu-bg: #f0f4f7;
+      --tag-disco: #9fa0b5;
+      --tag-disco-bg: #f2f2f7;
+      --danger-color: #c48f8f;
+      --danger-bg: #fcf4f4;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Zen Maru Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 70px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      padding: 16px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ヘッダー */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 4px 4px;
+    }
+    .header-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .app-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text-main);
+    }
+    .app-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-sub);
+    }
+    .header-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-family: inherit;
+      color: var(--text-sub);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* 検索 & フィルターエリア */
+    .search-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .icon {
+      display: block;
+      width: 16px;
+      height: 16px;
+      flex: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .icon-lg {
+      width: 20px;
+      height: 20px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 9px 34px 9px 36px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-base);
+      border-radius: var(--radius-full);
+      font-size: 0.88rem;
+      font-family: inherit;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--accent-main);
+      background: #ffffff;
+    }
+    .clear-btn {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      display: none;
+    }
+
+    /* プラットフォーム切り替えセグメント */
+    .filter-segment {
+      display: flex;
+      background: var(--bg-base);
+      padding: 3px;
+      border-radius: var(--radius-full);
+    }
+    .segment-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 6px 0;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: inherit;
+      color: var(--text-sub);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    .segment-btn.active {
+      background: #ffffff;
+      color: var(--text-main);
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* 統計バー */
+    .status-count {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* シナリオ一覧 */
+    .scenario-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .scenario-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+    .scenario-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .scenario-title-area {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .scenario-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+    .scenario-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: var(--text-sub);
+    }
+    .scenario-meta > span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge-platform {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .badge-platform.uzu {
+      background: var(--tag-uzu-bg);
+      color: var(--tag-uzu);
+    }
+    .badge-platform.discord {
+      background: var(--tag-disco-bg);
+      color: var(--tag-disco);
+    }
+    .card-actions {
+      display: flex;
+      gap: 4px;
+    }
+    .icon-sub-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: var(--radius-sm);
+    }
+    .icon-sub-btn:hover {
+      color: var(--text-main);
+    }
+
+    /* 自キャラ・同卓者タグ */
+    .role-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.82rem;
+    }
+    .my-role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-light);
+      color: var(--accent-main);
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      width: fit-content;
+    }
+    .players-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .player-tag {
+      background: var(--bg-base);
+      color: var(--text-sub);
+      border-radius: var(--radius-md);
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .player-tag strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+    .player-tag.highlight {
+      background: #eef5ea;
+      border: 1px solid #c2debb;
+      color: #3b6b37;
+    }
+
+    /* ネタバレ開閉エリア（自爆・誤爆防止） */
+    .spoiler-toggle-area {
+      border-top: 1px dashed var(--border-color);
+      padding-top: 10px;
+    }
+    .spoiler-summary-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-family: inherit;
+      color: var(--text-sub);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .spoiler-summary-btn:hover {
+      background: var(--bg-base);
+    }
+    .spoiler-content {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background: #faf9f6;
+      border-radius: var(--radius-md);
+      border: 1px solid #ede8de;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--text-main);
+      flex-direction: column;
+      gap: 8px;
+    }
+    .spoiler-content.open {
+      display: flex;
+    }
+    .spoiler-field-title {
+      font-weight: 700;
+      color: var(--danger-color);
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .spoiler-memo-text {
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* モーダル */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-backdrop.active {
+      display: flex;
+    }
+    .modal-sheet {
+      background: #ffffff;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      border-radius: 24px 24px 0 0;
+      padding: 20px 18px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow-y: auto;
+      box-shadow: var(--shadow-md);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .modal-close-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+    }
+
+    /* フォームパーツ */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .form-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      background: var(--bg-base);
+    }
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--accent-main);
+      background: #ffffff;
+    }
+    .form-textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .spoiler-form-box {
+      border: 1px dashed var(--danger-color);
+      background: var(--danger-bg);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .spoiler-form-box .form-input, .spoiler-form-box .form-textarea {
+      background: #ffffff;
+    }
+    .submit-btn {
+      background: var(--accent-main);
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    /* ボトムバー */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+    .nav-inner {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 16px;
+    }
+    .add-floating-btn {
+      background: var(--accent-main);
+      color: #ffffff;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(91, 130, 114, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 10px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- ヘッダー -->
+  <header class="app-header">
+    <div class="header-title-wrap">
+      <h1 class="app-title">Madamystery Log</h1>
+      <span class="app-subtitle">通過シナリオ＆同卓者検索ロガー</span>
+    </div>
+    <button class="header-btn" id="openDataModalBtn">
+      <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+      データ管理
+    </button>
+  </header>
+
+  <!-- 検索 & フィルター -->
+  <div class="search-card">
+    <div class="search-input-wrap">
+      <span class="search-icon"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
+      <input type="text" id="searchInput" class="search-input" placeholder="シナリオ名、同卓者名、役職で即時検索...">
+      <button class="clear-btn" id="clearSearchBtn" aria-label="検索をクリア"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="filter-segment">
+      <button class="segment-btn active" data-platform="all">すべて</button>
+      <button class="segment-btn" data-platform="ウズ">ウズ</button>
+      <button class="segment-btn" data-platform="Discord">Discord</button>
+    </div>
+  </div>
+
+  <!-- 統計カウンター -->
+  <div class="status-count">
+    <span id="matchCount">表示中: 0 件</span>
+    <span id="totalCount">全 0 シナリオ通過</span>
+  </div>
+
+  <!-- シナリオ一覧 -->
+  <div class="scenario-list" id="scenarioList"></div>
+</div>
+
+<!-- ボトム固定バー -->
+<nav class="bottom-nav">
+  <div class="nav-inner">
+    <button class="header-btn" id="quickSearchBtn" style="border:none;box-shadow:none;"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>検索へ</button>
+    <button class="add-floating-btn" id="openAddModalBtn" aria-label="新しい記録を追加"><svg class="icon icon-lg" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
+    <button class="header-btn" id="scrollTopBtn" style="border:none;box-shadow:none;"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg>上へ</button>
+  </div>
+</nav>
+
+<!-- 新規追加・編集モーダル -->
+<div class="modal-backdrop" id="entryModal">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h2 class="modal-title" id="entryModalTitle">シナリオを記録</h2>
+      <button class="modal-close-btn" id="closeEntryModalBtn" aria-label="閉じる"><svg class="icon icon-lg" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+
+    <form id="entryForm" style="display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="editEntryId">
+
+      <div class="form-group">
+        <label class="form-label">シナリオ名 *</label>
+        <input type="text" id="formTitle" class="form-input" placeholder="例: 狂気山脈 陰謀の分水嶺" required>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">プレイ日</label>
+          <input type="date" id="formDate" class="form-input">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">プラットフォーム</label>
+          <select id="formPlatform" class="form-select">
+            <option value="ウズ">ウズ</option>
+            <option value="Discord">Discord</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">自分の配役（担当キャラクター）</label>
+        <input type="text" id="formMyRole" class="form-input" placeholder="例: 記者、教授、メイド長 など">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">同卓者 & 配役（改行またはカンマ区切り）</label>
+        <textarea id="formPlayersText" class="form-textarea" placeholder="例:
+Aさん (探偵)
+Bさん: 助手
+Cさん"></textarea>
+      </div>
+
+      <!-- ネタバレエリア -->
+      <div class="spoiler-form-box">
+        <span class="spoiler-field-title"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m10.29 3.86-8.1 14.14A2 2 0 0 0 3.92 21h16.16a2 2 0 0 0 1.73-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>ネタバレ・真相メモ（一覧では非表示）</span>
+        <div class="form-group">
+          <label class="form-label" style="color:var(--danger-color)">犯人 / 黒幕</label>
+          <input type="text" id="formCulprit" class="form-input" placeholder="例: メイド長">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="color:var(--danger-color)">トリック・真相・感想</label>
+          <textarea id="formSpoilerMemo" class="form-textarea" placeholder="犯行動機やトリック、伏線、勝敗の結末などを記録"></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="saveEntryBtn">記録を保存</button>
+    </form>
+  </div>
+</div>
+
+<!-- データ管理・移行モーダル -->
+<div class="modal-backdrop" id="dataModal">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h2 class="modal-title">データ管理 & バックアップ</h2>
+      <button class="modal-close-btn" id="closeDataModalBtn" aria-label="閉じる"><svg class="icon icon-lg" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;font-size:0.85rem;">
+      <p style="color:var(--text-sub);">
+        データはブラウザ内（localStorage）にのみ完全保存されています。
+      </p>
+
+      <div class="form-group">
+        <label class="form-label">JSONデータ（エクスポート / インポート）</label>
+        <textarea id="jsonArea" class="form-textarea" style="min-height:120px;font-family:monospace;font-size:0.75rem;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button class="header-btn" id="exportBtn" style="flex:1;justify-content:center;">現在の全データを書き出し</button>
+        <button class="header-btn" id="importBtn" style="flex:1;justify-content:center;background:var(--accent-light);color:var(--accent-main);border-color:#b9d4c8;">貼り付けデータを復元</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── 固有ストレージキー ──
+  const STORAGE_KEY = 'madamystery_log_store';
+
+  // ── 初期サンプルデータ ──
+  const DEFAULT_DATA = [
+    {
+      id: 'mm_sample_1',
+      title: '狂気山脈 陰謀の分水嶺',
+      date: '2026-04-12',
+      platform: 'Discord',
+      myRole: '記者',
+      players: [
+        { name: 'たなか', role: '教授' },
+        { name: 'すずき', role: '登山家' },
+        { name: 'さとう', role: '医者' }
+      ],
+      spoilers: {
+        culprit: '登山家',
+        memo: '二重遭難トリック。全員生還ルートで大盛り上がりだった。'
+      }
+    },
+    {
+      id: 'mm_sample_2',
+      title: '青い目撃者',
+      date: '2026-08-20',
+      platform: 'ウズ',
+      myRole: '探偵',
+      players: [
+        { name: 'ねこやま', role: '令嬢' },
+        { name: 'たなか', role: '執事' }
+      ],
+      spoilers: {
+        culprit: '執事',
+        memo: 'アリバイ工作が巧妙。投票成功で勝利。'
+      }
+    }
+  ];
+
+  // ── ストレージ管理 ──
+  function loadEntries() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : DEFAULT_DATA;
+    } catch (e) {
+      console.error('読み込み失敗:', e);
+      return DEFAULT_DATA;
+    }
+  }
+
+  function saveEntries(entries) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  }
+
+  let entries = loadEntries();
+  let currentPlatformFilter = 'all';
+  let currentSearchQuery = '';
+
+  // ── プレイヤー文字列の整形 ──
+  function parsePlayersInput(text) {
+    if (!text.trim()) return [];
+    return text.split(/\n|,|、/).map(line => {
+      line = line.trim();
+      if (!line) return null;
+      // "名前 (役職)" や "名前: 役職" のパース
+      const match = line.match(/^([^(:（]+)(?:[:(（]([^)）]+)[)）]?)?$/);
+      if (match) {
+        return {
+          name: match[1].trim(),
+          role: match[2] ? match[2].trim() : ''
+        };
+      }
+      return { name: line, role: '' };
+    }).filter(Boolean);
+  }
+
+  function formatPlayersToText(players) {
+    if (!players || !players.length) return '';
+    return players.map(p => p.role ? `${p.name} (${p.role})` : p.name).join('\n');
+  }
+
+  // ── 一覧描画 ──
+  const scenarioList = document.getElementById('scenarioList');
+  const searchInput = document.getElementById('searchInput');
+  const clearSearchBtn = document.getElementById('clearSearchBtn');
+  const matchCountEl = document.getElementById('matchCount');
+  const totalCountEl = document.getElementById('totalCount');
+
+  function renderList() {
+    scenarioList.innerHTML = '';
+    const q = currentSearchQuery.trim().toLowerCase();
+
+    const filtered = entries.filter(item => {
+      // プラットフォーム判定
+      if (currentPlatformFilter !== 'all' && item.platform !== currentPlatformFilter) {
+        return false;
+      }
+      // 検索判定（タイトル、配役、同卓者名、同卓者役職）
+      if (!q) return true;
+
+      const titleMatch = (item.title || '').toLowerCase().includes(q);
+      const myRoleMatch = (item.myRole || '').toLowerCase().includes(q);
+      const playerMatch = (item.players || []).some(p => 
+        (p.name || '').toLowerCase().includes(q) || (p.role || '').toLowerCase().includes(q)
+      );
+
+      return titleMatch || myRoleMatch || playerMatch;
+    });
+
+    totalCountEl.textContent = `全 ${entries.length} シナリオ通過`;
+    matchCountEl.textContent = `表示中: ${filtered.length} 件`;
+
+    if (filtered.length === 0) {
+      scenarioList.innerHTML = `
+        <div class="empty-state">
+          該当するシナリオが見つかりません。<br>
+          右下の追加ボタンから新しい記録を追加できます。
+        </div>
+      `;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'scenario-card';
+
+      // 同卓者タグのHTML生成
+      const playersHtml = (item.players || []).map(p => {
+        const isMatched = q && (p.name.toLowerCase().includes(q) || (p.role && p.role.toLowerCase().includes(q)));
+        return `
+          <span class="player-tag ${isMatched ? 'highlight' : ''}">
+            <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><strong>${escapeHtml(p.name)}</strong>${p.role ? ` (${escapeHtml(p.role)})` : ''}
+          </span>
+        `;
+      }).join('');
+
+      card.innerHTML = `
+        <div class="scenario-header">
+          <div class="scenario-title-area">
+            <h3 class="scenario-title">${escapeHtml(item.title)}</h3>
+            <div class="scenario-meta">
+              <span><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>${item.date || '日付未定'}</span>
+              <span class="badge-platform ${item.platform === 'ウズ' ? 'uzu' : 'discord'}">${item.platform || 'その他'}</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="icon-sub-btn edit-btn" data-id="${item.id}" title="編集" aria-label="編集"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></button>
+            <button class="icon-sub-btn del-btn" data-id="${item.id}" title="削除" aria-label="削除"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button>
+          </div>
+        </div>
+
+        <div class="role-section">
+          ${item.myRole ? `
+            <div class="my-role-badge">
+              <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>担当: ${escapeHtml(item.myRole)}
+            </div>
+          ` : ''}
+          ${playersHtml ? `<div class="players-list">${playersHtml}</div>` : ''}
+        </div>
+
+        ${(item.spoilers && (item.spoilers.culprit || item.spoilers.memo)) ? `
+          <div class="spoiler-toggle-area">
+            <button class="spoiler-summary-btn" aria-expanded="false">
+              <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m10.29 3.86-8.1 14.14A2 2 0 0 0 3.92 21h16.16a2 2 0 0 0 1.73-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              <span>ネタバレ・真相を表示</span>
+            </button>
+            <div class="spoiler-content">
+              ${item.spoilers.culprit ? `
+                <div>
+                  <span class="spoiler-field-title"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>犯人 / 結末</span>
+                  <div style="font-weight:600;margin-top:2px;">${escapeHtml(item.spoilers.culprit)}</div>
+                </div>
+              ` : ''}
+              ${item.spoilers.memo ? `
+                <div>
+                  <span class="spoiler-field-title"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M8 2h8l4 4v16H4V2z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/></svg>真相・プレイメモ</span>
+                  <div class="spoiler-memo-text" style="margin-top:2px;">${escapeHtml(item.spoilers.memo)}</div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        ` : ''}
+      `;
+
+      // ネタバレ開閉イベント
+      const spoilerBtn = card.querySelector('.spoiler-summary-btn');
+      if (spoilerBtn) {
+        const content = card.querySelector('.spoiler-content');
+        spoilerBtn.addEventListener('click', () => {
+          const isOpen = content.classList.toggle('open');
+          spoilerBtn.setAttribute('aria-expanded', String(isOpen));
+          spoilerBtn.innerHTML = isOpen
+            ? '<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"/><path d="M16.68 16.68A10.94 10.94 0 0 1 12 18c-5 0-9-6-9-6a17.3 17.3 0 0 1 3.12-3.88"/><path d="M9.9 5.24A10.9 10.9 0 0 1 12 5c5 0 9 7 9 7a17.4 17.4 0 0 1-2.1 2.9"/><path d="m2 2 20 20"/></svg><span>ネタバレを隠す</span>'
+            : '<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span>ネタバレ・真相を表示</span>';
+        });
+      }
+
+      // 編集・削除
+      card.querySelector('.edit-btn').addEventListener('click', () => openEditModal(item.id));
+      card.querySelector('.del-btn').addEventListener('click', () => deleteItem(item.id));
+
+      scenarioList.appendChild(card);
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>'"]/g, tag => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[tag] || tag));
+  }
+
+  // ── 検索・フィルターイベント ──
+  searchInput.addEventListener('input', (e) => {
+    currentSearchQuery = e.target.value;
+    clearSearchBtn.style.display = currentSearchQuery ? 'block' : 'none';
+    renderList();
+  });
+
+  clearSearchBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    currentSearchQuery = '';
+    clearSearchBtn.style.display = 'none';
+    renderList();
+  });
+
+  document.querySelectorAll('.filter-segment .segment-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-segment .segment-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentPlatformFilter = btn.dataset.platform;
+      renderList();
+    });
+  });
+
+  // ── モーダル制御 ──
+  const entryModal = document.getElementById('entryModal');
+  const dataModal = document.getElementById('dataModal');
+  const entryForm = document.getElementById('entryForm');
+
+  function openNewModal() {
+    document.getElementById('entryModalTitle').textContent = 'シナリオを記録';
+    document.getElementById('editEntryId').value = '';
+    entryForm.reset();
+    document.getElementById('formDate').value = new Date().toISOString().slice(0, 10);
+    entryModal.classList.add('active');
+  }
+
+  function openEditModal(id) {
+    const item = entries.find(x => x.id === id);
+    if (!item) return;
+
+    document.getElementById('entryModalTitle').textContent = '記録を編集';
+    document.getElementById('editEntryId').value = item.id;
+    document.getElementById('formTitle').value = item.title || '';
+    document.getElementById('formDate').value = item.date || '';
+    document.getElementById('formPlatform').value = item.platform || 'ウズ';
+    document.getElementById('formMyRole').value = item.myRole || '';
+    document.getElementById('formPlayersText').value = formatPlayersToText(item.players);
+    document.getElementById('formCulprit').value = item.spoilers?.culprit || '';
+    document.getElementById('formSpoilerMemo').value = item.spoilers?.memo || '';
+
+    entryModal.classList.add('active');
+  }
+
+  function deleteItem(id) {
+    if (!confirm('この記録を削除してもよろしいですか？')) return;
+    entries = entries.filter(x => x.id !== id);
+    saveEntries(entries);
+    renderList();
+  }
+
+  document.getElementById('openAddModalBtn').addEventListener('click', openNewModal);
+  document.getElementById('closeEntryModalBtn').addEventListener('click', () => entryModal.classList.remove('active'));
+  entryModal.addEventListener('click', (e) => {
+    if (e.target === entryModal) entryModal.classList.remove('active');
+  });
+
+  // フォーム保存
+  entryForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = document.getElementById('editEntryId').value || 'mm_' + Date.now();
+    const newEntry = {
+      id,
+      title: document.getElementById('formTitle').value.trim(),
+      date: document.getElementById('formDate').value,
+      platform: document.getElementById('formPlatform').value,
+      myRole: document.getElementById('formMyRole').value.trim(),
+      players: parsePlayersInput(document.getElementById('formPlayersText').value),
+      spoilers: {
+        culprit: document.getElementById('formCulprit').value.trim(),
+        memo: document.getElementById('formSpoilerMemo').value.trim()
+      }
+    };
+
+    const existingIdx = entries.findIndex(x => x.id === id);
+    if (existingIdx >= 0) {
+      entries[existingIdx] = newEntry;
+    } else {
+      entries.unshift(newEntry);
+    }
+
+    saveEntries(entries);
+    renderList();
+    entryModal.classList.remove('active');
+  });
+
+  // ── データ管理（JSONバックアップ） ──
+  document.getElementById('openDataModalBtn').addEventListener('click', () => {
+    document.getElementById('jsonArea').value = JSON.stringify(entries, null, 2);
+    dataModal.classList.add('active');
+  });
+  document.getElementById('closeDataModalBtn').addEventListener('click', () => dataModal.classList.remove('active'));
+  dataModal.addEventListener('click', (e) => {
+    if (e.target === dataModal) dataModal.classList.remove('active');
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    document.getElementById('jsonArea').value = JSON.stringify(entries, null, 2);
+    navigator.clipboard.writeText(JSON.stringify(entries, null, 2));
+    alert('JSONデータをクリップボードにコピーしました！');
+  });
+
+  document.getElementById('importBtn').addEventListener('click', () => {
+    try {
+      const parsed = JSON.parse(document.getElementById('jsonArea').value);
+      if (Array.isArray(parsed)) {
+        if (confirm('現在のデータを上書きして復元しますか？')) {
+          entries = parsed;
+          saveEntries(entries);
+          renderList();
+          dataModal.classList.remove('active');
+          alert('復元が完了しました！');
+        }
+      } else {
+        alert('配列形式のJSONを指定してください。');
+      }
+    } catch (err) {
+      alert('JSONの解析に失敗しました。書式を確認してください。');
+    }
+  });
+
+  // 補助スクロール
+  document.getElementById('quickSearchBtn').addEventListener('click', () => {
+    searchInput.focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  document.getElementById('scrollTopBtn').addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 初回描画
+  renderList();
+</script>
+</body>
+</html>
